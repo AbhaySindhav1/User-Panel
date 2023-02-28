@@ -1,0 +1,232 @@
+  $(this).closest("tr").find(".name").html(`<input   type="text"
+  id="Name"
+  name="Name"
+  class="form-control name"> ${name}</input`);
+
+  const email = $(this).closest("tr").find(".email").html();
+  $(this).closest("tr").find(".name").html(`<input  type="email"
+  name="Email"
+  id="Email"
+  class="form-control email"> ${email}</input`);
+
+  const phone = $(this).closest("tr").find(".phone").html();
+  $(this).closest("tr").find(".name").html(`<input     type="tel"
+  id="PhoneNO"
+  name="PhoneNo"
+  class="form-control phone"
+  maxlength="10"> ${phone}</input`);
+
+  const country = $(this).closest("tr").find(".country").html();
+  $(this).closest("tr").find(".name").html(`<input    type="text"
+  name="Country"
+  id="Countrycode"
+  class="form-control country"> ${country}</input`);
+
+
+
+
+  single fields 
+
+  //   $(this).closest("tr").find(".name").html(`<input type="text"
+  //   id="Namee"
+  //   name="Name"
+  //   class="form-control name" value="${name}" >`);
+
+  //   $(this).closest("tr").find(".country").html(`<input  type="text"
+  //   name="Country"
+  //   id="Countrycodee"
+  //   class="form-control country" value="${country}">`);
+
+  //   $(this).closest("tr").find(".email").html(`<input  type="email"
+  //   name="Email"
+  //   id="Emaile"
+  //   class="form-control email" value="${email}">`);
+
+  //   $(this).closest("tr").find(".phone").html(`<input type="tel"
+  //   id="PhoneNOe"
+  //   name="PhoneNo"
+  //   class="form-control phone"
+  //   maxlength="10" value="${phone}">`);
+
+  //   $(this).closest("tr").find("#buttonsforedit").html(`<div id="TdButtons">
+  //   <button class="saveButton">save</button>
+  // </div>`);
+
+
+
+  form submit 
+
+
+  // $("#dataform").submit(function (e) {
+//   e.preventDefault();
+
+//   const profile = $("#photo")[0].files[0];
+//   const Namevalue = $("#Name").val().trim().toLowerCase();
+//   const Emailvalue = $("#Email").val().trim().toLowerCase();
+//   const CountryCodevalue = $("#Countrycode").val().trim().toLowerCase();
+//   const PhoneNOvalue = $("#PhoneNO").val().trim().toLowerCase();
+
+//   const phone = "+91" + PhoneNOvalue;
+
+//   let data = new FormData();
+//   data.append("profile", profile);
+//   data.append("name", Namevalue);
+//   data.append("email", Emailvalue),
+//     data.append("country", CountryCodevalue),
+//     data.append("phone", phone);
+
+//   // console.log(data);
+
+//   $.ajax({
+//     type: "POST",
+//     url: "http://localhost:3000/user",
+//     data: data,
+//     contentType: false,
+//     processData: false,
+//     success: function (response) {
+//       // console.log({ response });
+//       const ID = response._id;
+//       // console.log(ID);
+//       const tr =
+//         "<tr id=" +
+//         ID +
+//         ">" +
+//         `<td class="IdDIV" style="width: 40px; overflow:hidden"> <div id="IdDIV" style="width: 40px" ` +
+//         "title=" +
+//         ID +
+//         `>` +
+//         ID +
+//         `</div></td>
+//         <td>
+//           <div>
+//           <img
+//             src="./UploadedImages/${response.profile}"
+//             alt="img"
+//             style="width: 60px; height:60px"
+//             console.log(tr);
+//             $("#UserTableBody").append(tr);
+//           },
+//         });
+//       });  />
+//         </div>
+//         </td>
+//         <td class="name">${response.name}</td>
+//         <td  class="email" style="width: 20%;">${response.email}</td>
+//         <td class="country" style="width: 10%;">${response.country}</td>
+//         <td class="phone" style="width: 15%;">${response.phone}</td>
+//         <td style="width: 30%;" id="buttonsforedit">
+//           <div id="TdButtons">
+//             <button class="editDetail">Edit</button>
+//             <button class="deleteUSer">Delete</button>
+//           </div>
+//         </td>
+//       </tr>`;
+//       // console.log(tr);
+//       // console.log(tr);
+//       $("#UserTableBody").append(tr);
+//     },
+//   });
+// });
+
+
+
+
+edi form
+
+
+
+
+  // $("#editForm").validate({
+  //   rules: {
+  //     Name: "required",
+  //     Email: "required",
+  //     Country: "required",
+  //     PhoneNo: {
+  //       required: true,
+  //       maxlength: 10,
+  //     },
+  //   },
+  //   messages: {
+  //     Name: "Please Provide Name",
+  //     Email: {
+  //       required: "please enter email",
+  //       email: true,
+  //     },
+  //     PhoneNo: "please provide correct number",
+  //     Country: "please provide Country",
+  //     PhoneNo: {
+  //       required: "please enter pass",
+  //       maxlength: "min 10 num",
+  //     },
+  //   },
+  //   submitHandler: function name(form) {
+  //     console.log("hello");
+      
+  //     form.submit();
+      
+  //     console.log("hello");
+
+
+
+      
+  //   }
+  
+  // })
+
+
+
+
+
+    `<tr id="`+trimedId+`"><form id="editForm">
+  <td
+      class="IdDIV"
+        style="width: 40px; overflow:hidden"
+        title="` +
+trimedId +
+`"
+      >
+        <div id="IdDIV" style="width: 40px">` +
+trimedId +
+`</div></td>
+      <td class="image"><div>
+          <img
+            src="` +
+ImgSrc +
+`"
+            alt="img"
+            style="width: 60px; height:60px"
+          />
+        </div></td>
+
+<td class="name"><input type="text"
+id="Namee"
+name="Name"
+class="form-control name" value="${name}" ></td>
+
+<td class="email" style="width: 20%;">
+<input  type="email"
+name="Email"
+id="Emaile"
+class="form-control email" value="${email}"></td>
+
+<td class="country" style="width: 10%;">
+<input  type="text"
+name="Country"
+id="Countrycodee"
+class="form-control country" value="${country}"></td>
+
+<td class="phone" style="width: 15%;">
+<input type="tel"
+id="PhoneNOe"
+name="PhoneNo"
+class="form-control phone"
+maxlength="1" value="${phone}"></td>
+
+<td style="width: 30%;" id="buttonsforedit">
+<div id="TdButtons">
+<button type="submit" class="saveButton">save</button>
+</div>
+</td>
+
+</form> 
+</tr>`

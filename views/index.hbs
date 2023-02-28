@@ -1,0 +1,191 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User_Task</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" type="text/css" href="./css/index.css" />
+
+  </head>
+  <body>
+    <div id="main-container">
+      <!--                                                         form                                               -->
+
+      <!--                                                         first Row Form                                               -->
+
+      <form
+        id="dataform"
+        class="container-fluid"
+        method="post"
+        enctype="multipart/form-data"
+        action="localhost:3000/user"
+      >
+        <div id="inputContainer">
+          <div class="fieldDiv" id="profilephotoDiv">
+            <label for="photo" class="form-label">Your Profile Photo</label>
+            <input
+              class="form-control photo"
+              type="file"
+              id="photo"
+              name="photo"
+            />
+          </div>
+
+          <div id="NameDiv" class="fieldDiv">
+            <label for="Name" class="form-label">Your Name</label>
+            <input
+              type="text"
+              id="Name"
+              name="Name"
+              class="form-control name"
+              placeholder="ex . Abhay Sindhav "
+              {{! required }}
+            />
+          </div>
+          <div id="EmailDiv" class="fieldDiv">
+            <label for="Email" class="form-label">Your Email</label>
+            <input
+              type="email"
+              name="Email"
+              id="Email"
+              class="form-control email"
+              placeholder="ex . Abhay@example.com "
+              {{! required }}
+            />
+          </div>
+
+          <div class="fieldDiv">
+            <label for="Country" class="form-label">Your Country</label>
+            <input
+              type="text"
+              name="Country"
+              id="Countrycode"
+              class="form-control country"
+              placeholder="ex . 'india' "
+              {{! required }}
+            />
+          </div>
+          <div class="fieldDiv">
+            <label for="PhoneNo" class="form-label">Your Phone-Number</label>
+            <input
+              type="tel"
+              id="PhoneNO"
+              name="PhoneNo"
+              class="form-control phone"
+              maxlength="10"
+              placeholder="ex . 982596xxxx "
+              {{! requireds }}
+            />
+          </div>
+        </div>
+        <div>
+          <button type="submit" id="infoFormBtn" class="btn btn-primary">
+            Submit
+          </button>
+        </div>
+      </form>
+
+      <!--                                                         searchBar                                               -->
+
+      <form id="searchform" class="container-fluid">
+        <div class="fieldDiv">
+          <input
+            class="form-control searchinput"
+            type="text"
+            id="nameSearch"
+            name="searchValue"
+            placeholder="Search  by   Name ,  Email , Phoneno."
+          />
+        </div>
+
+        <div>
+          <button type="submit" id="searchFormBtn" class="btn btn-primary">
+            Submit
+          </button>
+        </div>
+      </form>
+
+      <!--                                                         Table                                                -->
+
+      <div id="displaytable">
+        <table id="UserTable">
+          <thead>
+            <tr>
+              <th class="IdDIV"></th>
+              <th>Profile</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Country</th>
+              <th>Phone</th>
+              <th>Customization</th>
+            </tr>
+          </thead>
+          <tbody id="UserTableBody">
+            {{#each users}}
+              <tr id="{{_id}}">
+                <td
+                  class="IdDIV"
+                  style="width: 40px; overflow:hidden"
+                  title="{{_id}}"
+                >
+                  <div id="IdDIV" style="width: 40px">{{_id}}</div></td>
+                <td class="image"><div>
+                    <img
+                      src="./UploadedImages/{{profile}}"
+                      alt="img"
+                      style="width: 60px; height:60px"
+                    />
+                  </div></td>
+                <td class="name">{{name}}</td>
+                <td class="email" style="width: 20%;">{{email}}</td>
+                <td class="country" style="width: 10%;">{{country}}</td>
+                <td class="phone" style="width: 15%;">{{phone}}</td>
+                <td style="width: 30%;" id="buttonsforedit">
+                  <div id="TdButtons">
+                    <button class="editDetail">Edit</button>
+                    <button class="deleteUSer">Delete</button>
+                  </div>
+                </td>
+              </tr>
+            {{/each}}
+
+          </tbody>
+        </table>
+
+        {{!-- //                                                             {{! pagination }} --}}
+
+      </div>
+        <nav aria-label="..." class="pagination">
+          <ul class="pagination">
+            <li class="page-item ">
+              <a class="page-link" href="#" tabindex="-1">1</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+          </ul>
+        </nav>
+    </div>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.6.3.js"
+      integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"
+      integrity="sha512-rstIgDs0xPgmG6RX1Aba4KV5cWJbAMcvRCVmglpam9SoHZiUCyQVDdH2LPlxoHtrv17XWblE/V/PP+Tr04hbtA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    {{! <script src="../CONTROLLERS/functions.js"></script> }}
+    <script src="./js/index.js" defer></script>
+
+  </body>
+</html>
