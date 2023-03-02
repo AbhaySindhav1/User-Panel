@@ -14,6 +14,7 @@
 
   </head>
   <body>
+    <div class="deletePOP"></div>
     <div id="main-container">
       <!--                                                         form                                               -->
 
@@ -111,6 +112,7 @@
         </div>
       </form>
 
+
       <!--                                                         Table                                                -->
 
       <div id="displaytable">
@@ -128,6 +130,7 @@
           </thead>
           <tbody id="UserTableBody">
             {{#each users}}
+            
               <tr id="{{_id}}">
                 <td
                   class="IdDIV"
@@ -136,11 +139,22 @@
                 >
                   <div id="IdDIV" style="width: 40px">{{_id}}</div></td>
                 <td class="image"><div>
-                    <img
+
+{{#if profile}}
+  <img
                       src="./UploadedImages/{{profile}}"
                       alt="img"
                       style="width: 60px; height:60px"
                     />
+{{else}}
+ <img
+                      src="./UploadedImages/noUser.webp"
+                      alt="img"
+                      style="width: 60px; height:60px"
+                    />
+{{/if}}
+
+                  
                   </div></td>
                 <td class="name">{{name}}</td>
                 <td class="email" style="width: 20%;">{{email}}</td>
@@ -157,20 +171,20 @@
 
           </tbody>
         </table>
-
+</div>
         {{!-- //                                                             {{! pagination }} --}}
-
-      </div>
-        <nav aria-label="..." class="pagination">
-          <ul class="pagination">
-            <li class="page-item ">
-              <a class="page-link" href="#" tabindex="-1">1</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-          </ul>
-        </nav>
-    </div>
+<div>
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center" id="UlPageList">
+    
+   
+  </ul>
+</nav>
+</div>
+    <script>
+  window.totalPages = {{totalPages}};
+  
+    </script>
 
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script

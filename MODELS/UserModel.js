@@ -17,6 +17,7 @@ const userSchema = mongoose.Schema({
     required: true,
     trim: true,
     lowercase: true,
+    unique:true,
     validate(value) {
       if (!validator.isEmail(value)) {
         throw new Error("Please Enter Valid Email Address");
@@ -32,6 +33,7 @@ const userSchema = mongoose.Schema({
   phone: {
     type: String,
     required: true,
+    unique:true,  
     validate(value) {
       if (validator.isMobilePhone(value)) {
         throw new Error("enter valid phone");

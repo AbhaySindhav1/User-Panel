@@ -1,8 +1,49 @@
+const LiListForPagination = document.getElementById("UlPageList");
+console.log(window.totalPages);
+pageLinks(window.totalPages);
+
+LiListForPagination.addEventListener("click", (e) => {
+  e.preventDefault();
+  const pageNUM = e.target.textContent || 1;
+
+  const searchQueryValue = $("#nameSearch").val().trim();
+  let url;
+  if (!searchQueryValue) {
+    url = `http://localhost:3000/userAll?page=${pageNUM}`;
+  } else {
+    url =
+      `http://localhost:3000/users?searchValue=${searchQueryValue}` +
+      "&page=" +
+      `${pageNUM}`;
+  }
+  console.log(url);
+
+  $.ajax({
+    type: "GET",
+    url: url,
+
+    success: function (response) {
+      console.log(response);
+
+      $("#UserTableBody").empty();
+      response.users.forEach((element) => {
+        const tr = createRow(element);
+        $("#UserTableBody").append(tr);
+      });
+      if (!searchQueryValue) {
+        pageLinksforSearch(response.totalPages);
+      } else {
+        pageLinks(response.totalPages);
+      }
+    },
+  });
+});
+
 $("#dataform").validate({
   rules: {
-    photo: "required",
+    // photo: "required",
     Name: "required",
-    Email: "required",
+    Email: { required: true, email: true },
     Country: "required",
     PhoneNo: {
       required: true,
@@ -10,11 +51,11 @@ $("#dataform").validate({
     },
   },
   messages: {
-    photo: "please enter profile picture",
+    // photo: "please enter profile picture",
     Name: "Please Provide Name",
     Email: {
       required: "please enter email",
-      email: true,
+      includes: "@ ,. ",
     },
     PhoneNo: "please provide correct number",
     Country: "please provide Country",
@@ -25,7 +66,7 @@ $("#dataform").validate({
   },
 
   submitHandler: function name(form) {
-    console.log("hello");
+    // console.log("hello");
 
     form.submit();
 
@@ -35,7 +76,7 @@ $("#dataform").validate({
     const CountryCodevalue = $("#Countrycode").val().trim().toLowerCase();
     const PhoneNOvalue = $("#PhoneNO").val().trim().toLowerCase();
 
-    const phone = "+91" + PhoneNOvalue;
+    const phone = "+91 " + PhoneNOvalue;
 
     let data = new FormData();
     data.append("profile", profile);
@@ -53,46 +94,11 @@ $("#dataform").validate({
       contentType: false,
       processData: false,
       success: function (response) {
-        // console.log({ response });
-        const ID = response._id;
-        // console.log(ID);
-        const tr =
-          "<tr id=" +
-          ID +
-          ">" +
-          `<td class="IdDIV" style="width: 40px; overflow:hidden"> <div id="IdDIV" style="width: 40px" ` +
-          "title=" +
-          ID +
-          `>` +
-          ID +
-          `</div></td>
-        <td>
-          <div>
-          <img
-            src="./UploadedImages/${response.profile}"
-            alt="img"
-            style="width: 60px; height:60px"
-            console.log(tr);
-            $("#UserTableBody").append(tr);
-          },
-        });
-      });  />
-        </div>
-        </td>
-        <td class="name">${response.name}</td>
-        <td  class="email" style="width: 20%;">${response.email}</td>
-        <td class="country" style="width: 10%;">${response.country}</td>
-        <td class="phone" style="width: 15%;">${response.phone}</td>
-        <td style="width: 30%;" id="buttonsforedit">
-          <div id="TdButtons">
-            <button class="editDetail">Edit</button>
-            <button class="deleteUSer">Delete</button>
-          </div>
-        </td>
-      </tr>`;
-        // console.log(tr);
-        // console.log(tr);
-        $("#UserTableBody").prepend(tr);
+        console.log(response);
+        reloadData();
+      },
+      error: function (xhr, status, error) {
+        alert(xhr.responseText);
       },
     });
   },
@@ -102,6 +108,11 @@ $("#dataform").validate({
 
 $("#UserTable").on("click", ".deleteUSer", function (e) {
   e.preventDefault();
+  var confirmation = confirm("Are you sure you want to delete the user");
+  console.log(confirmation);
+  if (!confirmation) {
+    return;
+  }
   const id = $(this).closest("tr").attr("id");
   const data = { _id: id };
 
@@ -111,7 +122,8 @@ $("#UserTable").on("click", ".deleteUSer", function (e) {
     data: data,
     success: function (response) {
       $(`#${response._id}`).closest("tr").remove();
-      //   console.log({response});
+
+      reloadData();
     },
   });
 });
@@ -139,8 +151,6 @@ $("#UserTable").on("click", ".editDetail", function (e) {
   console.log(tr);
   console.log("ImgSrc", ImgSrc);
 
-  
-  
   $(this)
     .closest("tr")
     .html(
@@ -156,13 +166,12 @@ $("#UserTable").on("click", ".editDetail", function (e) {
         trimedId +
         `</div></td>
                 <td class="image"><div>
-                    <img
-                      src="` +
-        ImgSrc +
-        `"
-                      alt="img"
-                      style="width: 60px; height:60px"
-                    />
+                <input
+                class="form-control photo"
+                type="file"
+                id="photoe"
+                name="photo"
+              />
                   </div></td>
 
   <td class="name"><input type="text"
@@ -188,7 +197,7 @@ $("#UserTable").on("click", ".editDetail", function (e) {
   id="PhoneNOe"
   name="PhoneNo"
   class="form-control phone"
-  maxlength="13" value="${phone}"><span id="phoneerr"></span></td>
+  maxlength="14" value="${phone}"><span id="phoneerr"></span></td>
 
   <td style="width: 30%;" id="buttonsforedit">
   <div id="TdButtons">
@@ -208,7 +217,7 @@ $("#UserTable").on("click", ".editDetail", function (e) {
   button.addEventListener("click", (e) => {
     e.preventDefault();
 
-    if (!($("#Namee").val().length > 3)) {
+    if (!($("#Namee").val().length > 1)) {
       return (nameerror.textContent = "please provide name");
     } else {
       nameerror.textContent = "";
@@ -221,7 +230,6 @@ $("#UserTable").on("click", ".editDetail", function (e) {
     } else {
       emailerr.textContent = "";
     }
-
 
     if (!($("#Countrycodee").val().length > 2)) {
       return (countryerr.textContent = "please provide country");
@@ -237,60 +245,47 @@ $("#UserTable").on("click", ".editDetail", function (e) {
       phoneerr.textContent = "";
     }
 
-    const data = {
-      id: trimedId,
-      name: $("#Namee").val(),
+    const profilee = $("#photoe")[0].files[0];
+    const Namevaluee = $("#Namee").val().trim().toLowerCase();
+    const Emailvaluee = $("#Emaile").val().trim().toLowerCase();
+    const CountryCodevaluee = $("#Countrycodee").val().trim().toLowerCase();
+    const PhoneNOvaluee = $("#PhoneNOe").val().trim().toLowerCase();
 
-      email: $("#Emaile").val(),
+    let data = new FormData();
+    data.append("profile", profilee);
+    data.append("name", Namevaluee);
+    data.append("email", Emailvaluee),
+      data.append("country", CountryCodevaluee),
+      data.append("phone", PhoneNOvaluee);
+      data.append("_id", trimedId);
+console.log(data);
 
-      country: $("#Countrycodee").val(),
-      phone: $("#PhoneNOe").val(),
-    };
+
+    // const data = {
+    //   profile: $("#photoe")[0].files[0],
+    //   id: trimedId,
+    //   name: $("#Namee").val(),
+
+    //   email: $("#Emaile").val(),
+
+    //   country: $("#Countrycodee").val(),
+    //   phone: $("#PhoneNOe").val(),
+    // };
     // console.log(data);
 
     $.ajax({
       type: "PUT",
       url: "http://localhost:3000/user/update",
       data: data,
+      contentType: false,
+      processData: false,
       success: function (response) {
-        // console.log({ response });
-        response._id= response._id.trim()
-
-        const trr =
-          "<tr id=" +
-          response._id +
-          ">" +
-          `<td class="IdDIV" style="width: 40px; overflow:hidden" title="${response._id}" > <div id="IdDIV" style="width: 40px"  
-       > 
-    ` +
-          response._id +
-          `
-       
-        </div></td>
-      <td class="image">
-      <div>
-      <img
-        src="./UploadedImages/${response.profile}"
-        alt="img"
-        style="width: 60px; height:60px"
-      />
-    </div>
-      </td>
-      <td class="name">${response.name}</td>
-      <td class="email" style="width: 20%;">${response.email}</td>
-      <td class="country" style="width: 10%;">${response.country}</td>
-      <td class="phone" style="width: 15%;">${response.phone}</td>
-      <td style="width: 30%;" id="buttonsforedit">
-        <div id="TdButtons">
-          <button class="editDetail">Edit</button>
-          <button class="deleteUSer">Delete</button>
-        </div>
-      </td>
-    </tr>`;
-
-        // console.log(trr);
-
+        response._id = response._id.trim();
+        const trr = createRow(response);
         $(`#${response._id}`).replaceWith(trr);
+      },
+      error: function (xhr, status, error) {
+        alert(xhr.responseText);
       },
     });
   });
@@ -300,61 +295,109 @@ $("#UserTable").on("click", ".editDetail", function (e) {
 
 $("#searchform").submit(function (e) {
   e.preventDefault();
-  const page = 1;
-  const SearchValue = {searchValue:  $("#nameSearch").val() , page: page}
-  console.log(SearchValue);
+
+  searchValue = $("#nameSearch").val().trim();
 
   $.ajax({
     type: "GET",
-    url: "http://localhost:3000/users?searchValue=" + encodeURIComponent($("#nameSearch").val()) + "&page=" + page,
-    // body: {data:  $("#nameSearch").val() , page: page},
-    datatypes:"json",
+    url:
+      "http://localhost:3000/users?searchValue=" +
+      encodeURIComponent($("#nameSearch").val()) +
+      "&page=",
+    datatypes: "json",
     success: function (response) {
-      $("#UserTableBody tr").remove();
-      console.log(response);
+      $("#UserTableBody").empty();
 
-      const array = response;
-      // console.log(array.length);
+      const array = response.users;
       if (!array.length) {
         const nousertr = ` <div style="width:100%">no user found </div>`;
         return $("#UserTableBody").append(nousertr);
+      } else {
+        array.forEach((row) => {
+          const tr = createRow(row);
+          $("#UserTableBody").append(tr);
+        });
+        pageLinks(response.totalPages);
       }
-      array.forEach((row) => {
-        const ID = row._id;
-
-        const tr =
-          "<tr id=" +
-          ID +
-          ">" +
-          `<td class="IdDIV" style="width: 40px; overflow:hidden" title="` +
-          ID +
-          `"> <div id="IdDIV" style="width: 40px" >` +
-          ID +
-          `</div></td>
-          <td class="image">
-          <div>
-          <img
-            src="./UploadedImages/${row.profile}"
-            alt="img"
-            style="width: 60px; height:60px"
-          />
-        </div>
-          </td>
-          <td class="name">${row.name}</td>
-          <td class="email" style="width: 20%;">${row.email}</td>
-          <td  class="country" style="width: 10%;">${row.country}</td>
-          <td class="phone" style="width: 15%;">${row.phone}</td>
-          <td  style="width: 30%;" id="buttonsforedit">
-            <div id="TdButtons">
-              <button class="editDetail">Edit</button>
-              <button class="deleteUSer">Delete</button>
-            </div>
-          </td>
-        </tr>`;
-        // console.log(tr);
-        $("#UserTableBody").append(tr);
-      });
     },
   });
 });
 
+function pageLinks(totalPages) {
+  $("#UlPageList").empty();
+  for (let index = 0; index < totalPages; index++) {
+    const lis =
+      `<li class="page-item"><a class="page-link" href="http://localhost:3000/users?searchValue="` +
+      encodeURIComponent($("#nameSearch").val()) +
+      `"&page=${index + 1}"  >${index + 1}</a></li>`;
+    $("#UlPageList").append(lis);
+  }
+}
+
+function pageLinksforSearch(totalPages) {
+  $("#UlPageList").empty();
+  for (let index = 0; index < totalPages; index++) {
+    const lis = `<li class="page-item"><a class="page-link" href="localhost:3000/users?page=${
+      index + 1
+    }"  >${index + 1}</a></li>`;
+    $("#UlPageList").append(lis);
+  }
+}
+
+function reloadData() {
+  $.ajax({
+    type: "GET",
+    url: "http://localhost:3000/userAll",
+    success: function (response) {
+      console.log(response);
+      $("#UserTableBody").empty();
+      response.users.forEach((element) => {
+        const tr = createRow(element);
+        $("#UserTableBody").prepend(tr);
+      });
+      pageLinksforSearch(response.totalPages);
+    },
+  });
+}
+
+function createRow(response) {
+  if (!response.profile) {
+    response.profile = "noUser.webp";
+  }
+  const tr =
+    "<tr id=" +
+    response._id +
+    ">" +
+    `<td class="IdDIV" style="width: 40px; overflow:hidden"> <div id="IdDIV" style="width: 40px" ` +
+    "title=" +
+    response._id +
+    `>` +
+    response._id +
+    `</div></td>
+<td class="image">
+  <div>
+  <img
+    src="./UploadedImages/${response.profile}"
+    alt="img"
+    style="width: 60px; height:60px"
+    console.log(tr);
+    $("#UserTableBody").append(tr);
+  },
+});
+});  />
+</div>
+</td>
+<td class="name">${response.name}</td>
+<td  class="email" style="width: 20%;">${response.email}</td>
+<td class="country" style="width: 10%;">${response.country}</td>
+<td class="phone" style="width: 15%;">${response.phone}</td>
+<td style="width: 30%;" id="buttonsforedit">
+  <div id="TdButtons">
+    <button class="editDetail">Edit</button>
+    <button class="deleteUSer">Delete</button>
+  </div>
+</td>
+</tr>`;
+
+  return tr;
+}

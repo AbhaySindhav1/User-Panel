@@ -230,3 +230,158 @@ maxlength="1" value="${phone}"></td>
 
 </form> 
 </tr>`
+
+
+
+function displayData(response) {
+  const tr =
+  "<tr id=" +
+  response._id +
+  ">" +
+  `<td class="IdDIV" style="width: 40px; overflow:hidden"> <div id="IdDIV" style="width: 40px" ` +
+  "title=" +
+  response._id +
+  `>` +
+  response._id+
+  `</div></td>
+<td class="image">
+  <div>
+  <img
+    src="./UploadedImages/${response.profile}"
+    alt="img"
+    style="width: 60px; height:60px"
+    console.log(tr);
+    $("#UserTableBody").append(tr);
+  },
+});
+});  />
+</div>
+</td>
+<td class="name">${response.name}</td>
+<td  class="email" style="width: 20%;">${response.email}</td>
+<td class="country" style="width: 10%;">${response.country}</td>
+<td class="phone" style="width: 15%;">${response.phone}</td>
+<td style="width: 30%;" id="buttonsforedit">
+  <div id="TdButtons">
+    <button class="editDetail">Edit</button>
+    <button class="deleteUSer">Delete</button>
+  </div>
+</td>
+</tr>`;
+
+return tr
+}
+
+
+
+
+edit
+
+ "<tr id=" +
+    //       response._id +
+    //       ">" +
+    //       `<td class="IdDIV" style="width: 40px; overflow:hidden" title="${response._id}" > <div id="IdDIV" style="width: 40px"  
+    //    > 
+    // ` +
+    //       response._id +
+    //       `
+       
+    //     </div></td>
+    //   <td class="image">
+    //   <div>
+    //   <img
+    //     src="./UploadedImages/${response.profile}"
+    //     alt="img"
+    //     style="width: 60px; height:60px"
+    //   />
+    // </div>
+    //   </td>
+    //   <td class="name">${response.name}</td>
+    //   <td class="email" style="width: 20%;">${response.email}</td>
+    //   <td class="country" style="width: 10%;">${response.country}</td>
+    //   <td class="phone" style="width: 15%;">${response.phone}</td>
+    //   <td style="width: 30%;" id="buttonsforedit">
+    //     <div id="TdButtons">
+    //       <button class="editDetail">Edit</button>
+    //       <button class="deleteUSer">Delete</button>
+    //     </div>
+    //   </td>
+    // </tr>`;
+
+        // console.log(trr);
+
+
+
+
+
+        pagination tr
+
+          "<tr id=" +
+//           ID +
+//           ">" +
+//           `<td class="IdDIV" style="width: 40px; overflow:hidden"> <div id="IdDIV" style="width: 40px" ` +
+//           "title=" +
+//           ID +
+//           `>` +
+//           ID +
+//           `</div></td>
+// <td class="image">
+//   <div>
+//   <img
+//     src="./UploadedImages/${element.profile}"
+//     alt="img"
+//     style="width: 60px; height:60px"
+//     console.log(tr);
+//     $("#UserTableBody").append(tr);
+//   },
+// });
+// });  />
+// </div>
+// </td>
+// <td class="name">${element.name}</td>
+// <td  class="email" style="width: 20%;">${element.email}</td>
+// <td class="country" style="width: 10%;">${element.country}</td>
+// <td class="phone" style="width: 15%;">${element.phone}</td>
+// <td style="width: 30%;" id="buttonsforedit">
+//   <div id="TdButtons">
+//     <button class="editDetail">Edit</button>
+//     <button class="deleteUSer">Delete</button>
+//   </div>
+// </td>
+// </tr>`;
+
+
+
+ //           "<tr id=" +
+      //           ID +
+      //           ">" +
+      //           `<td class="IdDIV" style="width: 40px; overflow:hidden"> <div id="IdDIV" style="width: 40px" ` +
+      //           "title=" +
+      //           ID +
+      //           `>` +
+      //           ID +
+      //           `</div></td>
+      //   <td class="image">
+      //     <div>
+      //     <img
+      //       src="./UploadedImages/${element.profile}"
+      //       alt="img"
+      //       style="width: 60px; height:60px"
+      //       console.log(tr);
+      //       $("#UserTableBody").append(tr);
+      //     },
+      //   });
+      // });  />
+      //   </div>
+      //   </td>
+      //   <td class="name">${element.name}</td>
+      //   <td  class="email" style="width: 20%;">${element.email}</td>
+      //   <td class="country" style="width: 10%;">${element.country}</td>
+      //   <td class="phone" style="width: 15%;">${element.phone}</td>
+      //   <td style="width: 30%;" id="buttonsforedit">
+      //     <div id="TdButtons">
+      //       <button class="editDetail">Edit</button>
+      //       <button class="deleteUSer">Delete</button>
+      //     </div>
+      //   </td>
+      // </tr>`;
