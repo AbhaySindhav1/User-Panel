@@ -1,21 +1,27 @@
 const LiListForPagination = document.getElementById("UlPageList");
-console.log(window.totalPages);
-pageLinks(window.totalPages);
+
+if(!window.searchQuery){
+  window.searchQuery=""
+}
+console.log(window.totalPages,window.hasPreviousPage,window.previousPage,window.currentPage,window.hasNextPage,window.nextPage,window.searchQuery);
+
+// pageLinks(window.totalPages);
+navPaginationLinks(window.totalPages,window.hasPreviousPage,window.previousPage,window.currentPage,window.hasNextPage,window.nextPage,window.searchQuery);
+
 
 LiListForPagination.addEventListener("click", (e) => {
   e.preventDefault();
-  const pageNUM = e.target.textContent || 1;
+  e.stopPropagation();
+  // const pageNUM = e.target.textContent || 1;
+  const liHref =  e.target.getAttribute('href');
+  console.log(liHref);
 
-  const searchQueryValue = $("#nameSearch").val().trim();
+  // const searchQueryValue = $("#nameSearch").val().trim() || "";
   let url;
-  if (!searchQueryValue) {
-    url = `http://localhost:3000/userAll?page=${pageNUM}`;
-  } else {
-    url =
-      `http://localhost:3000/users?searchValue=${searchQueryValue}` +
-      "&page=" +
-      `${pageNUM}`;
-  }
+ 
+    url =liHref
+      
+  
   console.log(url);
 
   $.ajax({
@@ -30,11 +36,10 @@ LiListForPagination.addEventListener("click", (e) => {
         const tr = createRow(element);
         $("#UserTableBody").append(tr);
       });
-      if (!searchQueryValue) {
-        pageLinksforSearch(response.totalPages);
-      } else {
-        pageLinks(response.totalPages);
-      }
+     
+      navPaginationLinks(response.totalPages,response.hasPreviousPage,response.previousPage,response.currentPage,response.hasNextPage,response.nextPage,response.searchQuery);
+
+      
     },
   });
 });
@@ -260,19 +265,6 @@ $("#UserTable").on("click", ".editDetail", function (e) {
       data.append("_id", trimedId);
 console.log(data);
 
-
-    // const data = {
-    //   profile: $("#photoe")[0].files[0],
-    //   id: trimedId,
-    //   name: $("#Namee").val(),
-
-    //   email: $("#Emaile").val(),
-
-    //   country: $("#Countrycodee").val(),
-    //   phone: $("#PhoneNOe").val(),
-    // };
-    // console.log(data);
-
     $.ajax({
       type: "PUT",
       url: "http://localhost:3000/user/update",
@@ -301,48 +293,44 @@ $("#searchform").submit(function (e) {
   $.ajax({
     type: "GET",
     url:
-      "http://localhost:3000/users?searchValue=" +
+      "http://localhost:3000/userAll?searchValue=" +
       encodeURIComponent($("#nameSearch").val()) +
-      "&page=",
+      "&page=1",
     datatypes: "json",
     success: function (response) {
+      console.log(response);
+      navPaginationLinks(response.totalPages,response.hasPreviousPage,response.previousPage,response.currentPage,response.hasNextPage,response.nextPage,response.searchQuery);
       $("#UserTableBody").empty();
 
       const array = response.users;
       if (!array.length) {
         const nousertr = ` <div style="width:100%">no user found </div>`;
+    $("#UlPageList").empty()
+
         return $("#UserTableBody").append(nousertr);
       } else {
         array.forEach((row) => {
           const tr = createRow(row);
           $("#UserTableBody").append(tr);
         });
-        pageLinks(response.totalPages);
+
       }
     },
   });
 });
 
-function pageLinks(totalPages) {
-  $("#UlPageList").empty();
-  for (let index = 0; index < totalPages; index++) {
-    const lis =
-      `<li class="page-item"><a class="page-link" href="http://localhost:3000/users?searchValue="` +
-      encodeURIComponent($("#nameSearch").val()) +
-      `"&page=${index + 1}"  >${index + 1}</a></li>`;
-    $("#UlPageList").append(lis);
-  }
-}
+// function pageLinks(totalPages) {
+//   $("#UlPageList").empty();
+  
+//   for (let index = 0; index < totalPages; index++) {
+//     const lis =
+//       `<li class="page-item"><a class="page-link" href="http://localhost:3000/userAll?searchValue="` +
+//       encodeURIComponent($("#nameSearch").val()) +
+//       `"&page=${index + 1}"  >${index + 1}</a></li>`;
+//     $("#UlPageList").append(lis);
+//   }
+// }
 
-function pageLinksforSearch(totalPages) {
-  $("#UlPageList").empty();
-  for (let index = 0; index < totalPages; index++) {
-    const lis = `<li class="page-item"><a class="page-link" href="localhost:3000/users?page=${
-      index + 1
-    }"  >${index + 1}</a></li>`;
-    $("#UlPageList").append(lis);
-  }
-}
 
 function reloadData() {
   $.ajax({
@@ -355,7 +343,7 @@ function reloadData() {
         const tr = createRow(element);
         $("#UserTableBody").prepend(tr);
       });
-      pageLinksforSearch(response.totalPages);
+      navPaginationLinks(response.totalPages,response.hasPreviousPage,response.previousPage,response.currentPage,response.hasNextPage,response.nextPage,response.searchQuery);
     },
   });
 }
@@ -400,4 +388,47 @@ function createRow(response) {
 </tr>`;
 
   return tr;
+}
+
+
+
+
+function navPaginationLinks(   totalPages,
+  hasPreviousPage,
+  previousPage,
+currentPage,
+  hasNextPage,
+  nextPage,
+  searchQuery) {
+    $("#UlPageList").empty()
+
+if (hasPreviousPage) {
+  let prevPageLink = ` <li class="page-item ">
+  <a class="page-link" href="http://localhost:3000/userAll?searchValue=${searchQuery}&page=${previousPage}" tabindex="-1">Previous</a>
+</li>
+<li class="page-item"><a class="page-link" href="http://localhost:3000/userAll?searchValue=${searchQuery}&page=${previousPage}" id="${previousPage}">${previousPage}</a></li>`
+$("#UlPageList").append(prevPageLink);
+
+} else {
+  let prevPageLink =`<li class="page-item disabled">
+  <a class="page-link" href="#" tabindex="-1">Previous</a>
+  </li>`
+  $("#UlPageList").append(prevPageLink);
+}
+
+let currentPageLink = ` <li class="page-item active"><a class="page-link" href="http://localhost:3000/userAll?searchValue=${searchQuery}&page=${currentPage}" id="${currentPage}">${currentPage}</a></li>`
+$("#UlPageList").append(currentPageLink);
+
+if (hasNextPage) {
+  let nextPageLink = ` <li class="page-item"><a class="page-link" href="http://localhost:3000/userAll?searchValue=${searchQuery}&page=${nextPage}" id="${nextPage}">${nextPage}</a></li>
+  <li class="page-item">
+    <a class="page-link" href="http://localhost:3000/userAll?searchValue=${searchQuery}&page=${nextPage}">Next</a>
+    </li>`
+    $("#UlPageList").append(nextPageLink);
+} else {
+  let nextPageLink = `<li class="page-item disabled">
+  <a class="page-link" href="#">Next</a>
+</li>`
+$("#UlPageList").append(nextPageLink);
+}
 }

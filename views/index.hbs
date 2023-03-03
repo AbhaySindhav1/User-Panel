@@ -75,11 +75,12 @@
           <div class="fieldDiv">
             <label for="PhoneNo" class="form-label">Your Phone-Number</label>
             <input
-              type="tel"
+              type="number"
               id="PhoneNO"
               name="PhoneNo"
+             
               class="form-control phone"
-              maxlength="10"
+              max="10"
               placeholder="ex . 982596xxxx "
               {{! requireds }}
             />
@@ -148,7 +149,7 @@
                     />
 {{else}}
  <img
-                      src="./UploadedImages/noUser.webp"
+                      src="/UploadedImages/noUser.webp"
                       alt="img"
                       style="width: 60px; height:60px"
                     />
@@ -173,16 +174,22 @@
         </table>
 </div>
         {{!-- //                                                             {{! pagination }} --}}
-<div>
-<nav aria-label="Page navigation example">
-  <ul class="pagination justify-content-center" id="UlPageList">
-    
+<div id="navDI">
+<nav aria-label="Page navigation example" id="nav">
+  <ul class="pagination justify-content-center"  id="UlPageList">
    
+
   </ul>
 </nav>
 </div>
     <script>
   window.totalPages = {{totalPages}};
+  window.hasPreviousPage = {{hasPreviousPage}};
+  window.previousPage = {{previousPage}};
+  window.currentPage = {{currentPage}};
+  window.hasNextPage = {{hasNextPage}};
+  window.nextPage = {{nextPage}};
+  {{!-- window.searchQuery = {{searchQuery}}; --}}
   
     </script>
 

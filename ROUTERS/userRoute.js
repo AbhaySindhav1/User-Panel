@@ -28,9 +28,7 @@ const upload = multer({ storage: storage });
 
 //                                                              //      Create A User    //                                                                  //
 router.post("/user", upload.single("profile"), async (req, res) => {
-  // console.log("1");
-  // console.log(req.body.phone);
-  if (req.file) {
+   if (req.file) {
     req.body.profile = req.file.filename;
   } else {
     req.body.profile = "";
@@ -52,15 +50,14 @@ router.post("/user", upload.single("profile"), async (req, res) => {
       res.status(400).send("phone number is already registered");
     }
   }
-
-
 });
 
 //                                                              //      render  User    //                                                                  //
 
 router.get("/userShow", async (req, res) => {
+  const searchQuery = req.query.page;
   const usersPerPage = 5;
-  const currentPage = req.query.page || 1;
+  const currentPage = Number(req.query.page) || 1;
 
   const totalUsers = await User.countDocuments({});
   const totalPages = Math.ceil(totalUsers / usersPerPage);
@@ -85,50 +82,20 @@ router.get("/userShow", async (req, res) => {
     hasPreviousPage,
     previousPage,
     hasNextPage,
-    nextPage,
+    nextPage,searchQuery
   });
 });
 
 //                                                         Get  Users   //                                                                  //
 
 router.get("/userAll", async (req, res) => {
-  // console.log(req.query);
-
+  const searchQuery = req.query.searchValue || "";
   const usersPerPage = 5;
-  const currentPage = req.query.page || 1;
-  // console.log(currentPage);
-
-  const totalUsers = await User.countDocuments({});
-  const totalPages = Math.ceil(totalUsers / usersPerPage);
-
-  const hasPreviousPage = currentPage > 1;
-  const previousPage = currentPage - 1;
-
-  const hasNextPage = currentPage < totalPages;
-  const nextPage = currentPage + 1;
-
-  const startIndex = (currentPage - 1) * usersPerPage;
-  const endIndex = startIndex + usersPerPage;
-
-  const users = await User.find().skip(startIndex).limit(usersPerPage);
-
-  res.send({ users, totalPages });
-});
-
-//                                                         Get  User    //                                                                  //
-
-router.get("/users", async (req, res) => {
-  const searchQuery = req.body.data;
-
-  const usersPerPage = 5;
-  const currentPage = req.query.page || 1;
+  const currentPage = Number(req.query.page) || 1;
   const startIndex = (currentPage - 1) * usersPerPage;
 
-// console.log(startIndex);
-//   console.log(req.query.searchValue);
-//   console.log(currentPage);
+  const regext = new RegExp(searchQuery, "i");
 
-  const regext = new RegExp(req.query.searchValue, "i");
   try {
     const users = await User.find({
       $or: [
@@ -137,7 +104,9 @@ router.get("/users", async (req, res) => {
         { phone: regext },
         { country: regext },
       ],
-    }).skip(startIndex).limit(usersPerPage);
+    })
+      .skip(startIndex)
+      .limit(usersPerPage);
 
     const totalUsers = await User.find({
       $or: [
@@ -147,32 +116,42 @@ router.get("/users", async (req, res) => {
         { country: regext },
       ],
     }).countDocuments({});
-
-
-    
-    // console.log(totalUsers);
-    // console.log(users.length);
     const totalPages = Math.ceil(totalUsers / usersPerPage);
+  
+    const hasPreviousPage = currentPage > 1;
+    const previousPage = currentPage - 1;
+  
+    const hasNextPage = currentPage < totalPages;
+    const nextPage = currentPage + 1;
+  
+    const endIndex = startIndex + usersPerPage;
 
-    res.send({users,totalPages});
-
-    if (!users) {
-      return res.send("No User Found");
-    }
-  } catch (error) {
-    res.send(error);
+    res.send({
+      users,
+    totalPages,
+    currentPage,
+    hasPreviousPage,
+    previousPage,
+    hasNextPage,
+    nextPage,searchQuery
+    });
   }
+catch(e){
+  res.send("error",e)
+} 
 });
+
+
 
 //                                                              //      Update A User    //                                                                  //
 
-router.put("/user/update",upload.single("profile"), async (req, res) => {
+router.put("/user/update", upload.single("profile"), async (req, res) => {
   if (req.file) {
     req.body.profile = req.file.filename;
   } else {
     req.body.profile = "";
   }
-  
+
   const reqid = req.body._id;
   const trimedId = reqid.trim();
   const FieldForUpdate = Object.keys(req.body);
@@ -202,14 +181,14 @@ router.delete("/user/delete", async (req, res) => {
   try {
     // console.log(req.body._id);
     const user = await User.findByIdAndDelete(req.body._id);
-    const image = `public/UploadedImages/${user.profile}`
+    const image = `public/UploadedImages/${user.profile}`;
 
     // console.log(image);
     fs.unlink(image, (err) => {
       if (err) {
-        console.error(`Error deleting image file ${image}: ${err}`);
+        // console.error(`Error deleting image file ${image}: ${err}`);
       } else {
-        console.log(`Deleted image file ${image}`);
+        // console.log(`Deleted image file ${image}`);
       }
     });
     res.status(200).send(user);
