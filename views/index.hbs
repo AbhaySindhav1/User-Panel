@@ -78,9 +78,8 @@
               type="number"
               id="PhoneNO"
               name="PhoneNo"
-             
+             pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==10) return false;"
               class="form-control phone"
-              max="10"
               placeholder="ex . 982596xxxx "
               {{! requireds }}
             />

@@ -8,18 +8,17 @@ console.log(window.totalPages,window.hasPreviousPage,window.previousPage,window.
 // pageLinks(window.totalPages);
 navPaginationLinks(window.totalPages,window.hasPreviousPage,window.previousPage,window.currentPage,window.hasNextPage,window.nextPage,window.searchQuery);
 
+let page;
+let previousPageforpegination
 
 LiListForPagination.addEventListener("click", (e) => {
   e.preventDefault();
-  e.stopPropagation();
   // const pageNUM = e.target.textContent || 1;
-  const liHref =  e.target.getAttribute('href');
-  console.log(liHref);
-
-  // const searchQueryValue = $("#nameSearch").val().trim() || "";
-  let url;
+   page =  Number(e.target.getAttribute('data-store')) || previousPageforpegination;
+   previousPageforpegination = page;
+  const searchQueryValue = $("#nameSearch").val().trim() || "";
  
-    url =liHref
+    url ="http://localhost:3000/userAll?searchValue="+searchQueryValue+"&page="+page
       
   
   console.log(url);
@@ -137,6 +136,8 @@ $("#UserTable").on("click", ".deleteUSer", function (e) {
 
 $("#UserTable").on("click", ".editDetail", function (e) {
   e.preventDefault();
+
+  $(".editDetail").not(this).prop("disabled", true);
 
   const tr = $(this).closest("tr").html();
   const name = $(this).closest("tr").find(".name").html();
@@ -275,6 +276,9 @@ console.log(data);
         response._id = response._id.trim();
         const trr = createRow(response);
         $(`#${response._id}`).replaceWith(trr);
+
+        $(".editDetail").prop("disabled", false)
+
       },
       error: function (xhr, status, error) {
         alert(xhr.responseText);
@@ -404,9 +408,9 @@ currentPage,
 
 if (hasPreviousPage) {
   let prevPageLink = ` <li class="page-item ">
-  <a class="page-link" href="http://localhost:3000/userAll?searchValue=${searchQuery}&page=${previousPage}" tabindex="-1">Previous</a>
+  <a class="page-link" data-store=${previousPage} tabindex="-1">Previous</a>
 </li>
-<li class="page-item"><a class="page-link" href="http://localhost:3000/userAll?searchValue=${searchQuery}&page=${previousPage}" id="${previousPage}">${previousPage}</a></li>`
+<li class="page-item"><a class="page-link" data-store=${previousPage} id="${previousPage}">${previousPage}</a></li>`
 $("#UlPageList").append(prevPageLink);
 
 } else {
@@ -416,13 +420,13 @@ $("#UlPageList").append(prevPageLink);
   $("#UlPageList").append(prevPageLink);
 }
 
-let currentPageLink = ` <li class="page-item active"><a class="page-link" href="http://localhost:3000/userAll?searchValue=${searchQuery}&page=${currentPage}" id="${currentPage}">${currentPage}</a></li>`
+let currentPageLink = ` <li class="page-item active"><a class="page-link" data-store=${currentPage} id="${currentPage}">${currentPage}</a></li>`
 $("#UlPageList").append(currentPageLink);
 
 if (hasNextPage) {
-  let nextPageLink = ` <li class="page-item"><a class="page-link" href="http://localhost:3000/userAll?searchValue=${searchQuery}&page=${nextPage}" id="${nextPage}">${nextPage}</a></li>
+  let nextPageLink = ` <li class="page-item"><a class="page-link" data-store=${nextPage} id="${nextPage}">${nextPage}</a></li>
   <li class="page-item">
-    <a class="page-link" href="http://localhost:3000/userAll?searchValue=${searchQuery}&page=${nextPage}">Next</a>
+    <a class="page-link" data-store=${nextPage}>Next</a>
     </li>`
     $("#UlPageList").append(nextPageLink);
 } else {
