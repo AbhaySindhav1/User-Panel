@@ -339,7 +339,7 @@ $("#searchform").submit(function (e) {
 function reloadData() {
   $.ajax({
     type: "GET",
-    url: "http://localhost:3000/userAll",
+    url: "http://localhost:3000/userAll?searchValue="+searchQueryValue+"&page="+page,
     success: function (response) {
       console.log(response);
       $("#UserTableBody").empty();
